@@ -1,58 +1,62 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ProTeachers (teacher-docs)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Ýurdumyzyň ýokary okuw mekdepleriniň professor-mugallymlaryny, talyplaryny we ylmy merkezlerini birleşdirýän sanly bilim platformasy.
 
-## About Laravel
+ProTeachers is a comprehensive academic portal designed as a "ProDoctorov" style platform for educators, universities, and students in Turkmenistan. It features a full administrative management suite, dedicated teacher portals, public academic catalogs, direct student-to-teacher private messaging, downloadable educational materials, and phone-based SMS OTP authentication.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Key Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Public Front-End
+- **Educators Directory**: Search and filter teachers by institution, department, academic subject, and years of experience.
+- **Detailed Academic Profiles**: View qualifications, degrees, biographies, assigned faculties, ratings, and published materials.
+- **Study Materials Catalog**: Browse and download lecture notes, textbooks, and presentations (PDF, DOCX, PPTX, XLSX, ZIP) with automatic download counting.
+- **Direct 1-on-1 Chat**: Students can message verified teachers directly with attachment support.
+- **Multilingual Support**: Instant locale switching between Turkmen (`tk`), Russian (`ru`), and English (`en`).
 
-## Learning Laravel
+### 2. Teacher Portal
+- **Personal Dashboard**: Track uploaded documents, total download metrics, student conversations, and rating scores.
+- **Profile Management**: Maintain multilingual academic titles, degrees, bio, and associated university/department.
+- **Document Manager**: Upload, manage visibility (public/private), and categorize educational materials by subject.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Administrator Control Panel
+- **Dashboard Analytics**: High-level counters for teachers, students, universities, departments, documents, and chats.
+- **Faculty & Institutional Hierarchy**: Full CRUD for universities, institutes, departments, and academic lessons.
+- **Educator Verification**: Verify credentials and approve teacher accounts.
+- **Chat Oversight**: Supervise and moderate conversation threads and messages.
+- **Global Settings**: Configure logos, favicons, site titles in 3 languages, contact phone lines, address, and social links (Instagram, TikTok, WhatsApp, IMO).
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Authentication & SMS Gateway Engine
+- **Phone-First Auth**: Passwordless or OTP-secured login and registration via phone numbers.
+- **SMS Gateway Integration**: Built-in queue (`otp_gateway_messages`) with dedicated API endpoints for Android SMS gateway applications.
+- **Developer Bypass**: Automatic master OTP (`240774`) enabled in local/debug environments for rapid testing.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 5. Performance & Search
+- **PostgreSQL Trigram Search**: Indexed using `pg_trgm` GIN operators for instant fuzzy searching across names, titles, and descriptions.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Tech Stack
 
-```bash
-composer require laravel/boost --dev
+- **Backend Framework**: Laravel 11.x (PHP 8.2+)
+- **Database**: PostgreSQL (with `pg_trgm` extension) / MySQL
+- **Frontend**: Blade, Bootstrap 5, Bootstrap Icons, FontAwesome, Select2, Toastr, Swiper
+- **Authentication**: Custom Session & SMS OTP Verification System
 
-php artisan boost:install
-```
+---
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Database Architecture
 
-## Contributing
+- `users`: Core account details, phone, avatar, role (`admin`, `teacher`, `student`), and status.
+- `institutions`: Universities, colleges, and research centers with multilingual names and logos.
+- `departments`: Academic faculties and departments linked to institutions.
+- `lessons`: Academic disciplines, icons, and slug identifiers.
+- `teacher_profiles`: Academic titles, degrees, experience, rating, verification flag, and bio.
+- `lesson_teacher`: Pivot table linking educators to taught disciplines.
+- `documents`: Uploaded academic files, file size, extension, downloads count, and visibility.
+- `conversations` & `messages`: Threaded private messaging between students and teachers.
+- `otp_codes` & `otp_gateway_messages`: OTP generation, expiry tracking, and outgoing SMS daemon queue.
+- `settings`: Site-wide branding, dual phone lines, address, and social links.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
