@@ -41,7 +41,7 @@
                 <a href="{{ route('teacher.portal.documents') }}" class="btn btn-white border btn-sm rounded-pill px-3 py-2 fw-semibold text-dark shadow-xs">
                     <i class="bi bi-folder2-open me-1 text-success"></i> Resminamalar
                 </a>
-                <a href="{{ route('teacher.portal.profile.edit') }}" class="btn btn-white border btn-sm rounded-pill px-3 py-2 fw-semibold text-dark shadow-xs">
+                <a href="{{ route('teacher.portal.profile') }}" class="btn btn-white border btn-sm rounded-pill px-3 py-2 fw-semibold text-dark shadow-xs">
                     <i class="bi bi-person-gear me-1 text-primary"></i> Profili sazla
                 </a>
                 @if(Route::has('teachers.show'))
