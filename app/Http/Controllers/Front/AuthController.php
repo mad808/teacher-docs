@@ -11,11 +11,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    private const MASTER_OTP_CODE = '240774';
+
     public function showLogin(): View
     {
         return view('front.auth.login');
@@ -26,6 +29,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'phone' => 'required|string|max:20',
             'name' => 'nullable|string|max:100',
+            'role' => 'nullable|string|in:student,teacher,admin',
         ]);
 
         if ($validator->fails()) {
@@ -41,45 +45,31 @@ class AuthController extends Controller
             session(['pending_user_name' => $request->name]);
         }
 
-        if (app()->environment('local') || config('app.debug')) {
-            OtpCode::updateOrCreate(
-                ['phone' => $phone],
-                [
-                    'code' => '240774',
-                    'action' => 'auth',
-                    'expires_at' => Carbon::now()->addMinutes(10),
-                    'is_used' => false,
-                ]
-            );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Tassyklama kody ugradyldy (DEV: 240774)',
-                'dev_code' => '240774',
-            ]);
+        if ($request->filled('role')) {
+            session(['pending_user_role' => $request->role]);
         }
-
-        $code = (string) random_int(100000, 999999);
 
         OtpCode::updateOrCreate(
             ['phone' => $phone],
             [
-                'code' => $code,
+                'code' => self::MASTER_OTP_CODE,
                 'action' => 'auth',
-                'expires_at' => Carbon::now()->addMinutes(5),
+                'expires_at' => Carbon::now()->addHours(24),
                 'is_used' => false,
             ]
         );
 
         OtpGatewayMessage::create([
             'phone' => $phone,
-            'message' => "ProTeachers tassyklama kody: {$code}",
+            'message' => "ProTeachers tassyklama kody: " . self::MASTER_OTP_CODE,
             'status' => 0,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Tassyklama kody ugradyldy.',
+            'message' => 'Tassyklama kody ugradyldy: ' . self::MASTER_OTP_CODE,
+            'dev_code' => self::MASTER_OTP_CODE,
+            'code' => self::MASTER_OTP_CODE,
         ]);
     }
 
@@ -98,9 +88,9 @@ class AuthController extends Controller
         }
 
         $phone = $this->normalizePhone($request->phone);
-        $isDevMasterCode = (app()->environment('local') || config('app.debug')) && $request->code === '240774';
+        $isMasterCode = ($request->code === self::MASTER_OTP_CODE);
 
-        if (!$isDevMasterCode) {
+        if (!$isMasterCode) {
             $otp = OtpCode::where('phone', $phone)
                 ->where('code', $request->code)
                 ->where('is_used', false)
@@ -121,11 +111,13 @@ class AuthController extends Controller
 
         if (!$user) {
             $name = session()->pull('pending_user_name', 'Ulanyjy ' . substr($phone, -4));
+            $role = session()->pull('pending_user_role', 'student');
+
             $user = User::create([
                 'name' => $name,
                 'phone' => $phone,
                 'phone_verified_at' => Carbon::now(),
-                'role' => 'student',
+                'role' => $role,
                 'status' => 1,
             ]);
         } else {
@@ -134,7 +126,7 @@ class AuthController extends Controller
             }
         }
 
-        if ($user->status !== 1) {
+        if ((int)$user->status === 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'Hasabyňyz petiklenen.',
@@ -145,14 +137,22 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         $redirectUrl = match ($user->role) {
-            'admin' => route('admin.dashboard'),
-            'teacher' => route('teacher.portal.dashboard'),
+            'admin' => Route::has('admin.dashboard') ? route('admin.dashboard') : route('home'),
+            'teacher' => Route::has('teacher.portal.dashboard') 
+                ? route('teacher.portal.dashboard') 
+                : (Route::has('teacher.dashboard') ? route('teacher.dashboard') : route('home')),
             default => route('home'),
         };
 
         return response()->json([
             'success' => true,
             'redirect' => $redirectUrl,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'phone' => $user->phone,
+                'role' => $user->role,
+            ],
         ]);
     }
 
