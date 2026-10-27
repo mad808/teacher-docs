@@ -40,10 +40,10 @@ ProTeachers is a comprehensive academic portal designed as a "ProDoctorov" style
 
 ## Tech Stack
 
-- **Backend Framework**: Laravel 11.x (PHP 8.2+)
-- **Database**: PostgreSQL (with `pg_trgm` extension) / MySQL
-- **Frontend**: Blade, Bootstrap 5, Bootstrap Icons, FontAwesome, Select2, Toastr, Swiper
-- **Authentication**: Custom Session & SMS OTP Verification System
+- **Backend Framework**: Laravel 11.x (PHP 8.2+).
+- **Database**: PostgreSQL (with `pg_trgm` extension) / MySQL.
+- **Frontend**: Blade, Bootstrap 5, Bootstrap Icons, FontAwesome, Select2, Toastr, Swiper.
+- **Authentication**: Custom Session & SMS OTP Verification System.
 
 ---
 
