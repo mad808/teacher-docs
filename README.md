@@ -29,7 +29,7 @@ ProTeachers is a comprehensive academic portal designed as a "ProDoctorov" style
 - **Global Settings**: Configure logos, favicons, site titles in 3 languages, contact phone lines, address, and social links (Instagram, TikTok, WhatsApp, IMO).
 
 ### 4. Authentication & SMS Gateway Engine
-- **Phone-First Auth**: Passwordless or OTP-secured login and registration via phone numbers.
+- **Phone-First Auth**: Passwordless or OTP-secured login and registration via phone number.
 - **SMS Gateway Integration**: Built-in queue (`otp_gateway_messages`) with dedicated API endpoints for Android SMS gateway applications.
 - **Developer Bypass**: Automatic master OTP (`240774`) enabled in local/debug environments for rapid testing.
 
