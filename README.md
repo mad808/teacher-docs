@@ -17,7 +17,7 @@ ProTeachers is a comprehensive academic portal designed as a "ProDoctorov" style
 
 ### 2. Teacher Portal
 - **Personal Dashboard**: Track uploaded documents, total download metrics, student conversations, and rating scores.
-- **Profile Management**: Maintain multilingual academic titles, degrees, bio, and associated university/department.
+- **Profile Management**: Maintain multilingual academic titles, degrees, bio, and associated university / department.
 - **Document Manager**: Upload, manage visibility (public/private), and categorize educational materials by subject.
 
 ### 3. Administrator Control Panel
